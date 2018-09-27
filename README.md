@@ -13,8 +13,11 @@ pip install python-magic
 # Usage
 ```sh
 from py3wetransfer import Py3WeTransfer
-x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", "transfer")
+
+x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", "application name")
+
 print( x.upload_file("test.zip", "test upload") )
+
 >> "https://we.tl/t-ajQpdqGxco"
 ```
 
