@@ -26,14 +26,27 @@ class Py3WeTransfer(object):
             requests_log = logging.getLogger("requests.packages.urllib3")
             requests_log.setLevel(logging.DEBUG)
             requests_log.propagate = True
+        self.authorize()
+    
+    
+    def authorize(self):
+        address = 'https://dev.wetransfer.com/v2/authorize'
+        headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key }
+        data    = { 'user_identifier': self.user_identifier }
+        if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
+        r = requests.post(address, headers=headers)
+        if self.debug : print(r.text)
+        try :
+            self.token = "Bearer " + (json.loads(r.text))['token']
+            if self.debug: print("authorization passed")
+        except :
+            print(r.text)
     
     
     def upload_file(self, file_path, message):
         mime_type = mime.from_file(file_path)
         file_name = os.path.basename(file_path)
         file_size = os.path.getsize(file_path)
-        
-        if self.token == "": self.authorize()
         
         if self.sender == "" or len(self.recipients) == 0 :
             [transfer_id, file_id, part_numbers, chunk_size] = self.create_new_transfer(message, file_name, file_size)
@@ -72,42 +85,23 @@ class Py3WeTransfer(object):
             return self.finalize_transfer_mail(transfer_id, part_numbers)
     
     
-    def authorize(self):
-        address = 'https://dev.wetransfer.com/v2/authorize'
-        headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key }
-        data    = { 'user_identifier': self.user_identifier }
-        if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
-        r = requests.post(address, headers=headers)
-        if self.debug : print(r.text)
-        try :
-            self.token = "Bearer " + (json.loads(r.text))['token']
-            if self.debug: print("authorization passed")
-        except :
-            print(r.text)
-    
-    
     def create_new_transfer(self, message, file_name, file_size):
-        if self.token != "":
-            address = 'https://dev.wetransfer.com/v2/transfers'
-            headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
-            data    = { "message":message, "files":[{"name":file_name, "size":file_size}] }
-            if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
-            r = requests.post(address, headers=headers, data=json.dumps(data))
-            if self.debug : print(r.text)
-            return [   (json.loads(r.text))['id'], (json.loads(r.text))['files'][0]['id'],
-                       (json.loads(r.text))['files'][0]['multipart']['part_numbers'], (json.loads(r.text))['files'][0]['multipart']['chunk_size'] ]
-        else :
-            if self.debug: print("unauthentified")
-            return ["","",0,0]
+        address = 'https://dev.wetransfer.com/v2/transfers'
+        headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
+        data    = { "message":message, "files":[{"name":file_name, "size":file_size}] }
+        if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
+        r = requests.post(address, headers=headers, data=json.dumps(data))
+        if self.debug : print(r.text)
+        return [   (json.loads(r.text))['id'], (json.loads(r.text))['files'][0]['id'],
+                   (json.loads(r.text))['files'][0]['multipart']['part_numbers'], (json.loads(r.text))['files'][0]['multipart']['chunk_size'] ]
     
     
     def request_upload_url(self, transfer_id, file_id, part_number):
-        if self.token != "":
-            address = 'https://dev.wetransfer.com/v2/transfers/%s/files/%s/upload-url/%s' % (transfer_id, file_id, part_number)
-            headers={ "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
-            r = requests.get(address, headers=headers)
-            if self.debug : print(r.text)
-            return (json.loads(r.text))['url']
+        address = 'https://dev.wetransfer.com/v2/transfers/%s/files/%s/upload-url/%s' % (transfer_id, file_id, part_number)
+        headers={ "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
+        r = requests.get(address, headers=headers)
+        if self.debug : print(r.text)
+        return (json.loads(r.text))['url']
     
     
     def file_upload(self, url, file_name, mime_type, bytes_stream):
@@ -144,62 +138,57 @@ class Py3WeTransfer(object):
         self.language = language
     
     def create_new_transfer_mail(self, message, file_name, file_size, sender, recipients, language):
-        if self.token != "":
-            address = 'https://wetransfer.com/api/v4/transfers/email'
-            headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
-            data    = { "recipients": recipients, "message":message, "from": sender, "ui_naguage":language,
-                        "domain_user_id":self.user_identifier, "files":[{"name":file_name, "size":file_size}] }
-            if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
-            r = requests.post(address, headers=headers, data=json.dumps(data))
-            if self.debug : print(r.text)
-            
-            # calculate number of chunk parts
-            part_numbers = ( file_size // (json.loads(r.text))['files'][0]['chunk_size'] ) + 1
-            
-            return [   (json.loads(r.text))['id'], (json.loads(r.text))['files'][0]['id'],
-                       part_numbers, (json.loads(r.text))['files'][0]['chunk_size'] ]
+        address = 'https://wetransfer.com/api/v4/transfers/email'
+        headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
+        data    = { "recipients": recipients, "message":message, "from": sender, "ui_naguage":language,
+                    "domain_user_id":self.user_identifier, "files":[{"name":file_name, "size":file_size}] }
+        if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
+        r = requests.post(address, headers=headers, data=json.dumps(data))
+        if self.debug : print(r.text)
+         
+        # calculate number of chunk parts
+        part_numbers = ( file_size // (json.loads(r.text))['files'][0]['chunk_size'] ) + 1
+        
+        return [   (json.loads(r.text))['id'], (json.loads(r.text))['files'][0]['id'],
+                   part_numbers, (json.loads(r.text))['files'][0]['chunk_size'] ]
     
-    
+     
     def request_transfer_mail(self, transfer_id, file_name, file_size):
-        if self.token != "":
-            address = 'https://wetransfer.com/api/v4/transfers/%s/files' % transfer_id
-            headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
-            data    = { "name": file_name, "size": file_size }
-            if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
-            r = requests.post(address, headers=headers, data=json.dumps(data))
-            if self.debug : print(r.text)
-            return [ (json.loads(r.text))['id'], (json.loads(r.text))['chunk_size'] ]
+        address = 'https://wetransfer.com/api/v4/transfers/%s/files' % transfer_id
+        headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
+        data    = { "name": file_name, "size": file_size }
+        if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
+        r = requests.post(address, headers=headers, data=json.dumps(data))
+        if self.debug : print(r.text)
+        return [ (json.loads(r.text))['id'], (json.loads(r.text))['chunk_size'] ]
     
     
     def request_upload_url_mail(self, transfer_id, file_id, part_number, chunk_size, chunk_crc):
-        if self.token != "":
-            address = 'https://wetransfer.com/api/v4/transfers/%s/files/%s/part-put-url' % (transfer_id, file_id)
-            headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
-            data    = { "chunk_number": part_number, "chunk_size": chunk_size, "chunk_crc": chunk_crc, "retries": 0 }
-            if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
-            r = requests.post(address, headers=headers, data=json.dumps(data))
-            if self.debug : print(r.text)
-            return (json.loads(r.text))['url']
+        address = 'https://wetransfer.com/api/v4/transfers/%s/files/%s/part-put-url' % (transfer_id, file_id)
+        headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
+        data    = { "chunk_number": part_number, "chunk_size": chunk_size, "chunk_crc": chunk_crc, "retries": 0 }
+        if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
+        r = requests.post(address, headers=headers, data=json.dumps(data))
+        if self.debug : print(r.text)
+        return (json.loads(r.text))['url']
     
     
     def complete_file_upload_mail(self, transfer_id, file_id, part_numbers):
-        if self.token != "":
-            address = 'https://wetransfer.com/api/v4/transfers/%s/files/%s/finalize-mpp' % (transfer_id, file_id)
-            headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
-            data    = { "chunk_count": part_numbers }
-            if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
-            r = requests.put(address, headers=headers, data=json.dumps(data))
-            if self.debug : print(r.text)
-            return (json.loads(r.text))['id']
+        address = 'https://wetransfer.com/api/v4/transfers/%s/files/%s/finalize-mpp' % (transfer_id, file_id)
+        headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
+        data    = { "chunk_count": part_numbers }
+        if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
+        r = requests.put(address, headers=headers, data=json.dumps(data))
+        if self.debug : print(r.text)
+        return (json.loads(r.text))['id']
     
     def finalize_transfer_mail(self, transfer_id, part_numbers):
-        if self.token != "":
-            address = 'https://wetransfer.com/api/v4/transfers/%s/finalize' % transfer_id
-            headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
-            data    = { "chunk_count": part_numbers }
-            if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
-            r = requests.put(address, headers=headers, data=json.dumps(data))
-            if self.debug : print(r.text)
-            return (json.loads(r.text))['shortened_url']
+        address = 'https://wetransfer.com/api/v4/transfers/%s/finalize' % transfer_id
+        headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
+        data    = { "chunk_count": part_numbers }
+        if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
+        r = requests.put(address, headers=headers, data=json.dumps(data))
+        if self.debug : print(r.text)
+        return (json.loads(r.text))['shortened_url']
     
     

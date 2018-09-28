@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="py3wetransfer",
-    version="0.0.4",
+    version="0.0.5",
     author="Francois Liot",
     author_email="francois@liot.org",
     description="A Python 3 wrapper to use WeTransfer API V2 upload",
@@ -14,7 +14,8 @@ setuptools.setup(
     url="https://github.com/fliot/py3wetransfer",
     packages=setuptools.find_packages(),
     install_requires=[
-        "magic>=0.4",
+        "python-magic>=0.4",
+        "requests>=2.7.0"
     ],
     classifiers=[
         "Development Status :: 4 - Beta",

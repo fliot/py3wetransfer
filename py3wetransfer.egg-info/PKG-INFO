@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: py3wetransfer
-Version: 0.0.4
+Version: 0.0.5
 Summary: A Python 3 wrapper to use WeTransfer API V2 upload
 Home-page: https://github.com/fliot/py3wetransfer
 Author: Francois Liot
