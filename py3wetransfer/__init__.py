@@ -134,9 +134,10 @@ class Py3WeTransfer(object):
     ##################################################################################################################################
     # Warning, 
     # Bellow this, we use wetransfer API V4,
-    # Which is currently undocumented, then which can be subject to changes...
+    # Which is currently undocumented, against WeTransfer's CLUF and probably subject to changes...
     ##################################################################################################################################
     def emails(self, sender, recipients, language="en") :
+        print("This functionnality use automatically the WeTransfer private API V4. This is against the current WeTransfer's CLUF License. Use it only for testing purpose !")
         # initialization function
         self.sender = sender
         self.recipients = recipients
