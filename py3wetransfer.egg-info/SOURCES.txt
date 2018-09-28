@@ -1,6 +1,7 @@
 README.md
 setup.py
 py3wetransfer/__init__.py
+py3wetransfer/py3wetransfer.py
 py3wetransfer.egg-info/PKG-INFO
 py3wetransfer.egg-info/SOURCES.txt
 py3wetransfer.egg-info/dependency_links.txt
