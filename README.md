@@ -10,6 +10,12 @@ python > 3.5
 pip install python-magic
 ```
 
+We are working to publish the package on Pypi,
+Soon available as
+```sh
+pip install py3wetransfer
+```
+
 # Usage
 **Before starting make sure you have an API key acquired from [Developers Portal](https://developers.wetransfer.com/).**
 
