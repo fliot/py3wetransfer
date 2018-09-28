@@ -6,14 +6,9 @@ Based on current [WeTransfer API V2][wetransferdoc]
 
 python > 3.5
 
-For manual installation, you will need :
+We are working to publish the package on Pypi, soon available, and immediatelly available on test.pypi.org:
 ```sh
-pip install python-magic
-```
-
-We are working to publish the package on Pypi, soon available as
-```sh
-pip install py3wetransfer
+pip install --index-url https://test.pypi.org/simple/ py3wetransfer
 ```
 
 # Usage
