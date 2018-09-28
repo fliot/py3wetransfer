@@ -51,17 +51,16 @@ print( x.upload_file("test.zip", "test upload") )
 ```
 
 # Complete optionnal parameters
-**WeTransfer asks officially for a valid "domain_user_id", in practise, it perfectly works without providing it, but you can also provide it...**
-**You can use a complete debug logging, including http request, requests library and py3wetransfer logs**
-**Sent emails are localized, English is the default language, you can select your own : language="fr"**
+WeTransfer asks officially for a valid "domain_user_id"/"user_identifier" in their API documentation, but in practise, it perfectly works without providing it, but you can also provide it if you really want...
+
+You can use a complete debug logging, including http request, requests library and py3wetransfer logs.
+
+Sent emails are localized, English is the default language, you can select your own: language="fr"
 ```python
 from py3wetransfer import Py3WeTransfer
 
-x = Py3WeTransfer(
-                    "xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", 
-                    user_identifier="81940232-9857-4cf7-b685-7a404faf5205", 
-                    debug=True
-                 )
+x = Py3WeTransfer( "xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", 
+                     user_identifier="81940232-9857-4cf7-b685-7a404faf5205", debug=True)
 
 x.emails("sender@mail.com", ["reception1@somewhere.org", "there2@mail.net"], language="fr")
 
