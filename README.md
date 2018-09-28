@@ -18,7 +18,9 @@ To initialize the client, you need to use your own api key, and your own user id
 Simply send your file
 ```python
 from py3wetransfer import Py3WeTransfer
+
 x = Py3WeTransfer("<my-very-personal-api-key>")
+
 print( x.upload_file("test.zip", "test upload") )
 >> "https://we.tl/t-ajQpdqGxco"
 ```
@@ -26,16 +28,20 @@ print( x.upload_file("test.zip", "test upload") )
 Do it with debug
 ```python
 from py3wetransfer import Py3WeTransfer
-x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c"debug=True)
+
+x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", debug=True)
+
 print( x.upload_file("test.zip", "test upload") )
 ...
 ```
 
 # Use email notifications
-**The notification functionnality is not officially part of the WeTransfer API V2, but it's available on the net on thier API V4.**
+**The notification functionnality is not officially part of the WeTransfer API V2**, but it's available on the net on thier API V4, and perfectly works :-)
+
 Then, keep in mind that even if it perfectly works, this is not part of their current service level agreement.
 ```python
 from py3wetransfer import Py3WeTransfer
+
 x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 
 x.emails("sender@mail.com", ["reception1@somewhere.org", "there2@mail.net"])
@@ -50,7 +56,12 @@ print( x.upload_file("test.zip", "test upload") )
 **Sent emails are localized, English is the default language, you can select your own : language="fr"**
 ```python
 from py3wetransfer import Py3WeTransfer
-x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", user_identifier="81940232-9857-4cf7-b685-7a404faf5205", debug=True)
+
+x = Py3WeTransfer(
+                    "xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", 
+                    user_identifier="81940232-9857-4cf7-b685-7a404faf5205", 
+                    debug=True
+                 )
 
 x.emails("sender@mail.com", ["reception1@somewhere.org", "there2@mail.net"], language="fr")
 
