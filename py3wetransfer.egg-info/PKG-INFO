@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: py3wetransfer
-Version: 0.0.1
+Version: 0.0.2
 Summary: A small wrapper to use WeTransfer API V2 upload
 Home-page: https://github.com/fliot/py3wetransfer
 Author: Francois Liot
@@ -9,6 +9,7 @@ License: UNKNOWN
 Description: README.md
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
-Classifier: License :: OSI Approved :: Apache License, Version 2.0
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Operating System :: OS Independent
 Description-Content-Type: text/markdown

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="py3wetransfer",
-    version="0.0.1",
+    version="0.0.2",
     author="Francois Liot",
     author_email="francois@liot.org",
     description="A small wrapper to use WeTransfer API V2 upload",
@@ -15,7 +15,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: Apache License, Version 2.0",
+        "Development Status :: 4 - Beta",
+        "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
 )
