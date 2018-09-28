@@ -52,5 +52,6 @@ print( x.upload_file("test.zip", "test upload") )
 
 # TODO
   - support multiple file upload
+  - support board
 
    [wetransferdoc]: < : https://developers.wetransfer.com/documentation>
