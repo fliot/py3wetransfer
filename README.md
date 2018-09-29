@@ -1,14 +1,12 @@
 # WeTransfer V2 Upload wrapper
 
-Built by myself for Python 3.x, because I didn't find such thing already written anywhere else...
+This module allows you to use WeTransfer services directly, from python 3.x.
 
-Based on current [WeTransfer API V2][wetransferdoc]
+It is based on current WeTransfer API V2: https://developers.wetransfer.com/documentation
 
-python > 3.5
-
-We are working to publish the package on Pypi, soon available, and immediatelly available on test.pypi.org:
+Install though Pypi:
 ```sh
-pip install --index-url https://test.pypi.org/simple/ py3wetransfer
+pip install py3wetransfer
 ```
 
 # Functional features
@@ -132,5 +130,3 @@ x = Py3WeTransfer( "xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c",
 print( x.upload_file("test.zip", "test upload") )
 >> "https://we.tl/t-ajQpdqGxco"
 ```
-
-   [wetransferdoc]: < : https://developers.wetransfer.com/documentation>
