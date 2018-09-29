@@ -12,8 +12,9 @@ pip install --index-url https://test.pypi.org/simple/ py3wetransfer
 ```
 
 # Functional features
-  - Transfer API (single upload and multiple uploads)
+  - Transfer API
 https://wetransfer.github.io/wt-api-docs/index.html#transfer-api
+
   - Board API
 https://wetransfer.github.io/wt-api-docs/index.html#board-api
 
@@ -75,9 +76,36 @@ board_object = x.get_board( board_id )
 
 # Debug
 ```python
+import logging
 from py3wetransfer import Py3WeTransfer
 
-x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", debug=True)
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
+py3wetransfer_log = logging.getLogger("py3wetransfer")
+py3wetransfer_log.setLevel(logging.DEBUG)
+py3wetransfer_log.propagate = True
+
+x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
+
+print( x.upload_file("test.zip", "test upload") )
+...
+```
+
+If you want to see complete http traffic:
+```python
+import logging
+from py3wetransfer import Py3WeTransfer
+
+import http.client as http_client
+http_client.HTTPConnection.debuglevel = 1
+
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
+py3wetransfer_log = logging.getLogger("py3wetransfer")
+py3wetransfer_log.setLevel(logging.DEBUG)
+py3wetransfer_log.propagate = True
+
+x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 
 print( x.upload_file("test.zip", "test upload") )
 ...
@@ -88,9 +116,9 @@ If you need to test authentication validity
 ```python
 from py3wetransfer import Py3WeTransfer
 
-x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", debug=True)
+x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 
-if x.isAuthentified() : print("we are authentified)
+if x.isAuthentified() : print("we are authentified")
 ```
 
 # Additionnal authentication parameters
@@ -99,7 +127,7 @@ WeTransfer asks officially for a valid "domain_user_id"/"user_identifier" in the
 from py3wetransfer import Py3WeTransfer
 
 x = Py3WeTransfer( "xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", 
-                     user_identifier="81940232-9857-4cf7-b685-7a404faf5205", debug=True)
+                     user_identifier="81940232-9857-4cf7-b685-7a404faf5205")
 
 print( x.upload_file("test.zip", "test upload") )
 >> "https://we.tl/t-ajQpdqGxco"
