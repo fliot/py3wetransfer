@@ -14,13 +14,14 @@ pip install --index-url https://test.pypi.org/simple/ py3wetransfer
 # Functional features
   - single upload
   - multiple uploads
-  - embeded upload retries (as per WeTransfer API proposal)
   - board (very soon)
 
 # Usage
 **Before starting make sure you have an API key acquired from [Developers Portal](https://developers.wetransfer.com/).**
 
 To initialize the client, you need to use your own api key, and your own user identifier. 
+
+**upload_file**
 
 Simply send your file
 ```python
@@ -31,6 +32,8 @@ x = Py3WeTransfer("<my-very-personal-api-key>")
 print( x.upload_file("test.zip", "test upload") )
 >> "https://we.tl/t-ajQpdqGxco"
 ```
+
+**upload_files**
 
 Send several files
 ```python
