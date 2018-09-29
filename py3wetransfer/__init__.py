@@ -44,57 +44,78 @@ class Py3WeTransfer(object):
     
     
     def upload_file(self, file_path, message):
-        mime_type = mime.from_file(file_path)
-        file_name = os.path.basename(file_path)
-        file_size = os.path.getsize(file_path)
+        return self.upload_files([file_path], message)
+    
+    def upload_files(self, file_paths, message):
+        # multiple uploads
+        files = []
+        for file_path in file_paths :
+            files.append( { 'file_path': file_path,
+                            'file_name': os.path.basename(file_path),
+                            'file_size': os.path.getsize(file_path),
+                            'mime_type': mime.from_file(file_path) } )
         
         if self.sender == "" or len(self.recipients) == 0 :
-            [transfer_id, file_id, part_numbers, chunk_size] = self.create_new_transfer(message, file_name, file_size)
+            [transfer_id, files] = self.create_new_transfer(message, files)
             
-            i = 1
-            f = open(file_path, "rb")
-            bytes_read = f.read(chunk_size)
-            while bytes_read:
-                url = self.request_upload_url(transfer_id, file_id, i)
-                self.file_upload(url, file_name, mime_type, bytes_read)
-                bytes_read = f.read(chunk_size)
-                i += 1
-            f.close()
-            self.complete_file_upload(transfer_id, file_id, part_numbers)
+            for f in files:
+                i = 1
+                fr = open(f['file_path'], "rb")
+                bytes_read = fr.read(f['chunk_size'])
+                while bytes_read:
+                    url = self.request_upload_url(transfer_id, f['file_id'], i)
+                    self.file_upload(url, f['file_name'], f['mime_type'], bytes_read)
+                    bytes_read = fr.read(f['chunk_size'])
+                    i += 1
+                fr.close()
+                self.complete_file_upload(transfer_id, f['file_id'], f['part_numbers'])
             return self.finalize_transfer(transfer_id)
-        
+    
+    
         else : 
             # take care, this uses wetransfer API V4, which is currently undocumented
-            [transfer_id, file_id, part_numbers, chunk_size] = self.create_new_transfer_mail(message, file_name, file_size, self.sender, self.recipients, self.language)
-            [file_id, chunk_size] = self.request_transfer_mail(transfer_id, file_name, file_size)
+            [transfer_id, files] = self.create_new_transfer_mail(message, files, self.sender, self.recipients, self.language)
             
-            i = 1
-            f = open(file_path, "rb")
-            bytes_read = f.read(chunk_size)
-            while bytes_read:
-                # let's use an hard coded crc, since wetransfer doesn't use this value afterward...
-                chunk_crc = 888888888
+            part_numbers = 0
+            for f in files:
+                [file_id, chunk_size] = self.request_transfer_mail(transfer_id, f['file_name'], f['file_size'])
                 
-                url = self.request_upload_url_mail(transfer_id, file_id, i, chunk_size , chunk_crc)
-                self.file_upload(url, file_name, mime_type, bytes_read)
-                bytes_read = f.read(chunk_size)
-                i += 1
-            f.close()
-            
-            self.complete_file_upload_mail(transfer_id, file_id, part_numbers)
+                i = 1
+                fr = open(f['file_path'], "rb")
+                bytes_read = fr.read(f['chunk_size'])
+                while bytes_read:
+                    # let's use an hard coded crc, since wetransfer doesn't use this value afterward...
+                    chunk_crc = 888888888
+                    
+                    url = self.request_upload_url_mail(transfer_id, file_id, i, f['chunk_size'] , chunk_crc)
+                    self.file_upload(url, f['file_name'], f['mime_type'], bytes_read)
+                    bytes_read = fr.read(f['chunk_size'])
+                    i += 1
+                fr.close()
+                
+                self.complete_file_upload_mail(transfer_id, f['file_id'], f['part_numbers'])
+                part_numbers += f['part_numbers']
             return self.finalize_transfer_mail(transfer_id, part_numbers)
     
     
-    def create_new_transfer(self, message, file_name, file_size):
+    def create_new_transfer(self, message, files):
         address = 'https://dev.wetransfer.com/v2/transfers'
         headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
-        data    = { "message":message, "files":[{"name":file_name, "size":file_size}] }
+        files_stream = []
+        for i in files: files_stream.append( { "name": i['file_name'], 'size': i['file_size'] } )
+        data    = { "message":message, "files": files_stream }
         if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
         r = requests.post(address, headers=headers, data=json.dumps(data))
         if self.debug : print(r.text)
-        return [   (json.loads(r.text))['id'], (json.loads(r.text))['files'][0]['id'],
-                   (json.loads(r.text))['files'][0]['multipart']['part_numbers'], (json.loads(r.text))['files'][0]['multipart']['chunk_size'] ]
-    
+        for i in range(0, len((json.loads(r.text))['files'])):
+            files[i] = { 'file_path':files[i]['file_path'],
+                         'file_name':files[i]['file_name'],
+                         'file_size':files[i]['file_size'],
+                         'mime_type':files[i]['mime_type'],
+                         'file_id':(json.loads(r.text))['files'][i]['id'],
+                         'part_numbers':(json.loads(r.text))['files'][0]['multipart']['part_numbers'],
+                         'chunk_size':(json.loads(r.text))['files'][0]['multipart']['chunk_size'] }
+        return [   (json.loads(r.text))['id'], files ]
     
     def request_upload_url(self, transfer_id, file_id, part_number):
         address = 'https://dev.wetransfer.com/v2/transfers/%s/files/%s/upload-url/%s' % (transfer_id, file_id, part_number)
@@ -137,20 +158,26 @@ class Py3WeTransfer(object):
         self.recipients = recipients
         self.language = language
     
-    def create_new_transfer_mail(self, message, file_name, file_size, sender, recipients, language):
+    def create_new_transfer_mail(self, message, files, sender, recipients, language):
         address = 'https://wetransfer.com/api/v4/transfers/email'
         headers = { "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
+        files_stream = []
+        for i in files: files_stream.append( { "name": i['file_name'], 'size': i['file_size'] } )
         data    = { "recipients": recipients, "message":message, "from": sender, "ui_naguage":language,
-                    "domain_user_id":self.user_identifier, "files":[{"name":file_name, "size":file_size}] }
+                    "domain_user_id":self.user_identifier, "files": files_stream }
         if self.debug : print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
         r = requests.post(address, headers=headers, data=json.dumps(data))
         if self.debug : print(r.text)
-         
-        # calculate number of chunk parts
-        part_numbers = ( file_size // (json.loads(r.text))['files'][0]['chunk_size'] ) + 1
         
-        return [   (json.loads(r.text))['id'], (json.loads(r.text))['files'][0]['id'],
-                   part_numbers, (json.loads(r.text))['files'][0]['chunk_size'] ]
+        for i in range(0, len((json.loads(r.text))['files'])):
+            files[i] = { 'file_path':files[i]['file_path'],
+                         'file_name':files[i]['file_name'],
+                         'file_size':files[i]['file_size'],
+                         'mime_type':files[i]['mime_type'],
+                         'file_id':(json.loads(r.text))['files'][i]['id'],
+                         'part_numbers':( files[i]['file_size'] // (json.loads(r.text))['files'][0]['chunk_size'] ) + 1,
+                         'chunk_size':(json.loads(r.text))['files'][0]['chunk_size'] }
+        return [ (json.loads(r.text))['id'], files ]
     
      
     def request_transfer_mail(self, transfer_id, file_name, file_size):

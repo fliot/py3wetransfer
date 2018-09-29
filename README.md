@@ -11,6 +11,12 @@ We are working to publish the package on Pypi, soon available, and immediatelly 
 pip install --index-url https://test.pypi.org/simple/ py3wetransfer
 ```
 
+# Functional features
+  - single upload
+  - multiple uploads
+  - embeded upload retries (as per WeTransfer API proposal)
+  - board (very soon)
+
 # Usage
 **Before starting make sure you have an API key acquired from [Developers Portal](https://developers.wetransfer.com/).**
 
@@ -23,6 +29,16 @@ from py3wetransfer import Py3WeTransfer
 x = Py3WeTransfer("<my-very-personal-api-key>")
 
 print( x.upload_file("test.zip", "test upload") )
+>> "https://we.tl/t-ajQpdqGxco"
+```
+
+Send several files
+```python
+from py3wetransfer import Py3WeTransfer
+
+x = Py3WeTransfer("<my-very-personal-api-key>")
+
+print( x.upload_files( ["file1.zip", "file2.zip"] , "test upload") )
 >> "https://we.tl/t-ajQpdqGxco"
 ```
 
@@ -49,9 +65,5 @@ x = Py3WeTransfer( "xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c",
 print( x.upload_file("test.zip", "test upload") )
 >> "https://we.tl/t-ajQpdqGxco"
 ```
-
-# TODO
-  - support multiple file upload
-  - support board
 
    [wetransferdoc]: < : https://developers.wetransfer.com/documentation>
