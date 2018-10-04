@@ -16,7 +16,6 @@ setuptools.setup(
     url="https://github.com/fliot/py3wetransfer",
     packages=setuptools.find_packages(),
     install_requires=[
-        "python-magic>=0.4",
         "requests>=2.7.0"
     ],
     classifiers=[
