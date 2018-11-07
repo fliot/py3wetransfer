@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="py3wetransfer",
-    version="0.0.2",
+    version="0.0.3",
     author="Francois Liot",
     author_email="francois@liot.org",
     maintainer="Francois Liot",
@@ -16,7 +16,6 @@ setuptools.setup(
     url="https://github.com/fliot/py3wetransfer",
     packages=setuptools.find_packages(),
     install_requires=[
-        "python-magic>=0.4",
         "requests>=2.7.0"
     ],
     classifiers=[

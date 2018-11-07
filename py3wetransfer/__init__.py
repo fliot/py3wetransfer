@@ -1,13 +1,20 @@
 name = "py3wetransfer"
 
-import json, magic, os, requests
+import json, os, requests
+try:
+    import magic
+    mime = magic.Magic(mime=True)
+    from_file = mime.from_file
+except ImportError:
+    import mimetypes
+    from_file = mimetypes.guess_type
 
 import logging
 LOGGER = logging.getLogger("py3wetransfer")
 LOGGER.addHandler(logging.NullHandler())
 
 
-mime = magic.Magic(mime=True)
+
 
 class Py3WeTransfer(object):
     x_api_key = ""
@@ -77,7 +84,7 @@ class Py3WeTransfer(object):
             files.append( { 'file_path': file_path,
                             'file_name': os.path.basename(file_path),
                             'file_size': os.path.getsize(file_path),
-                            'mime_type': mime.from_file(file_path) } )
+                            'mime_type': from_file(file_path) } )
         
         address = 'https://dev.wetransfer.com/v2/boards/%s/files' % board_id
         headers={ "Content-Type":"application/json", "x-api-key": self.x_api_key, "Authorization": self.token }
@@ -130,7 +137,7 @@ class Py3WeTransfer(object):
             files.append( { 'file_path': file_path,
                             'file_name': os.path.basename(file_path),
                             'file_size': os.path.getsize(file_path),
-                            'mime_type': mime.from_file(file_path) } )
+                            'mime_type': from_file(file_path) } )
         
         if self.sender == "" or len(self.recipients) == 0 :
             [transfer_id, files] = self.create_new_transfer(message, files)
