@@ -37,3 +37,18 @@ class Board(WeTransferBase):
             raise WeTransferError(body['message'])
 
         return body['id'], body['url']
+
+    def add_links_to_board(self, board_id, data):
+        """
+        Add links to a board. The data must be a list containing of link objects, with
+        a link object being a dict with a title and a url.
+        :param board_id: Board id
+        :param data: Data
+        :return: Board info (see get_board())
+        """
+        status_code, body = self.post('boards/%s/links' % board_id, data=json.dumps(data))
+        if status_code != 201:
+            LOG.error(status_code, body['message'])
+            raise WeTransferError(body['message'])
+
+        return self.get_board(board_id)
