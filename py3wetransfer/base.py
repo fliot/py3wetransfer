@@ -76,3 +76,16 @@ class WeTransferBase(HttpClient):
         :return: True if authenticated, False otherwise
         """
         return self.__token is not None
+
+    @staticmethod
+    def s3_file_upload(url, filedata):
+        """
+        Convenience function to explicitly upload files to S3
+        :param url: S3 endpoint
+        :param filedata: actual data
+        :return: None
+        """
+        r = requests.put(url, data=filedata)
+        if r.status_code != 200:
+            LOG.error(r.text)
+            raise WeTransferError('Error uploading file(s) to AWS S3.')

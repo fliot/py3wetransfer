@@ -1,6 +1,5 @@
 import json
 import logging
-import requests
 from .base import WeTransferBase
 from .exc import WeTransferError
 from .file import File
@@ -41,19 +40,6 @@ class WeTransfer(WeTransferBase):
         if status_code != 200:
             LOG.error(body['message'])
             raise WeTransferError(body['message'])
-
-    @staticmethod
-    def __s3_file_upload(url, filedata):
-        """
-        Convenience function to explicitly upload files to S3
-        :param url: S3 endpoint
-        :param filedata: actual data
-        :return: None
-        """
-        r = requests.put(url, data=filedata)
-        if r.status_code != 200:
-            LOG.error(r.text)
-            raise WeTransferError('Error uploading file(s) to AWS S3.')
 
     def __request_upload_url(self, transfer_id, file_id, part_number):
         """
@@ -117,7 +103,7 @@ class WeTransfer(WeTransferBase):
                         break
 
                     url = self.__request_upload_url(transfer_id, file.id, part_number)
-                    self.__s3_file_upload(url, bytes_read)
+                    self.s3_file_upload(url, bytes_read)
                     part_number += 1
 
             self.__complete_file_upload(transfer_id, file.id, file.part_numbers)
