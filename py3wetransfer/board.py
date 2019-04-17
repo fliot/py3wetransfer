@@ -55,6 +55,12 @@ class Board(WeTransferBase):
         return self.get_board(board_id)
 
     def __complete_file_upload_board(self, board_id, file_id):
+        """
+        Mark the file upload as complete
+        :param board_id: Board id
+        :param file_id: File id
+        :return: None
+        """
         status_code, body = self.put('boards/%s/files/%s/upload-complete' % (board_id, file_id))
         if status_code != 202:
             LOG.error(status_code, body['message'])
@@ -62,7 +68,7 @@ class Board(WeTransferBase):
 
     def __request_upload_url_board(self, board_id, file_id, part_number, multipart_upload_id):
         """
-
+        Request special upload url, which is tailored for AWS S3
         :param board_id:
         :param file_id:
         :param part_number:
