@@ -27,9 +27,9 @@ To initialize the client, you need to use your own api key.
 
 Simply send your file
 ```python
-from py3wetransfer import Py3WeTransfer
+from py3wetransfer import WeTransfer
 
-x = Py3WeTransfer("<my-very-personal-api-key>")
+x = WeTransfer("<my-very-personal-api-key>")
 
 print( x.upload_file("test.zip", "test upload") )
 >> "https://we.tl/t-ajQpdqGxco"
@@ -39,9 +39,9 @@ print( x.upload_file("test.zip", "test upload") )
 
 Send several files
 ```python
-from py3wetransfer import Py3WeTransfer
+from py3wetransfer import WeTransfer
 
-x = Py3WeTransfer("<my-very-personal-api-key>")
+x = WeTransfer("<my-very-personal-api-key>")
 
 print( x.upload_files( ["file1.zip", "file2.zip"] , "test upload") )
 >> "https://we.tl/t-ajQpdqGxco"
@@ -52,9 +52,9 @@ print( x.upload_files( ["file1.zip", "file2.zip"] , "test upload") )
 **Manage board**
 
 ```python
-from py3wetransfer import Py3WeTransfer
+from py3wetransfer import WeTransfer
 
-x = Py3WeTransfer("<my-very-personal-api-key>")
+x = WeTransfer("<my-very-personal-api-key>")
 
 [ board_id, board_url ] = x.create_new_board("test board")
 
@@ -75,7 +75,7 @@ board_object = x.get_board( board_id )
 # Debug
 ```python
 import logging
-from py3wetransfer import Py3WeTransfer
+from py3wetransfer import WeTransfer
 
 logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
@@ -83,7 +83,7 @@ py3wetransfer_log = logging.getLogger("py3wetransfer")
 py3wetransfer_log.setLevel(logging.DEBUG)
 py3wetransfer_log.propagate = True
 
-x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
+x = WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 
 print( x.upload_file("test.zip", "test upload") )
 ...
@@ -116,7 +116,7 @@ from py3wetransfer import Py3WeTransfer
 
 x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 
-if x.isAuthentified() : print("we are authentified")
+if x.is_authenticated() : print("we are authenticated")
 ```
 
 # Additionnal authentication parameters

@@ -1,0 +1,2 @@
+class WeTransferError(RuntimeError):
+    pass
