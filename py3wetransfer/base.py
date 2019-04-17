@@ -69,3 +69,10 @@ class WeTransferBase(HttpClient):
         base_headers = self.__base_authorization_headers()
         headers = {'Authorization': self.__token}
         return {**headers, **base_headers}
+
+    def is_authenticated(self):
+        """
+        Indicate that we're authenticated (or not).
+        :return: True if authenticated, False otherwise
+        """
+        return self.__token is not None
