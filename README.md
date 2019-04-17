@@ -27,9 +27,9 @@ To initialize the client, you need to use your own api key.
 
 Simply send your file
 ```python
-from py3wetransfer import WeTransfer
+from py3wetransfer import TransferApi
 
-x = WeTransfer("<my-very-personal-api-key>")
+x = TransferApi("<my-very-personal-api-key>")
 
 print( x.upload_file("test.zip", "test upload") )
 >> "https://we.tl/t-ajQpdqGxco"
@@ -39,9 +39,9 @@ print( x.upload_file("test.zip", "test upload") )
 
 Send several files
 ```python
-from py3wetransfer import WeTransfer
+from py3wetransfer import TransferApi
 
-x = WeTransfer("<my-very-personal-api-key>")
+x = TransferApi("<my-very-personal-api-key>")
 
 print( x.upload_files( ["file1.zip", "file2.zip"] , "test upload") )
 >> "https://we.tl/t-ajQpdqGxco"
@@ -52,11 +52,11 @@ print( x.upload_files( ["file1.zip", "file2.zip"] , "test upload") )
 **Manage board**
 
 ```python
-from py3wetransfer import WeTransfer
+from py3wetransfer import BoardApi
 
-x = WeTransfer("<my-very-personal-api-key>")
+x = BoardApi("<my-very-personal-api-key>")
 
-[ board_id, board_url ] = x.create_new_board("test board")
+board_id, board_url = x.create_new_board("test board")
 
 print(board_url)
 >> "https://we.tl/t-ajQpdqGxco"
@@ -75,15 +75,15 @@ board_object = x.get_board( board_id )
 # Debug
 ```python
 import logging
-from py3wetransfer import WeTransfer
+from py3wetransfer import TransferApi
 
 logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
-py3wetransfer_log = logging.getLogger("py3wetransfer")
+py3wetransfer_log = logging.getLogger("py3-wetransfer")
 py3wetransfer_log.setLevel(logging.DEBUG)
 py3wetransfer_log.propagate = True
 
-x = WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
+x = TransferApi("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 
 print( x.upload_file("test.zip", "test upload") )
 ...
@@ -92,7 +92,7 @@ print( x.upload_file("test.zip", "test upload") )
 If you want to see complete http traffic:
 ```python
 import logging
-from py3wetransfer import Py3WeTransfer
+from py3wetransfer import TransferApi
 
 import http.client as http_client
 http_client.HTTPConnection.debuglevel = 1
@@ -103,7 +103,7 @@ py3wetransfer_log = logging.getLogger("py3wetransfer")
 py3wetransfer_log.setLevel(logging.DEBUG)
 py3wetransfer_log.propagate = True
 
-x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
+x = TransferApi("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 
 print( x.upload_file("test.zip", "test upload") )
 ...
@@ -112,9 +112,9 @@ print( x.upload_file("test.zip", "test upload") )
 # Testing authentication
 If you need to test authentication validity
 ```python
-from py3wetransfer import Py3WeTransfer
+from py3wetransfer import TransferApi
 
-x = Py3WeTransfer("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
+x = TransferApi("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 
 if x.is_authenticated() : print("we are authenticated")
 ```
@@ -122,9 +122,9 @@ if x.is_authenticated() : print("we are authenticated")
 # Additionnal authentication parameters
 WeTransfer asks officially for a valid "domain_user_id"/"user_identifier" in their API documentation, but in practise, it perfectly works without providing it, but you can also provide it if you really want...
 ```python
-from py3wetransfer import Py3WeTransfer
+from py3wetransfer import TransferApi
 
-x = Py3WeTransfer( "xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", 
+x = TransferApi( "xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", 
                      user_identifier="81940232-9857-4cf7-b685-7a404faf5205")
 
 print( x.upload_file("test.zip", "test upload") )
