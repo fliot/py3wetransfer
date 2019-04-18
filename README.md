@@ -35,7 +35,7 @@ from wetransfer import TransferApi
 
 x = TransferApi("<my-very-personal-api-key>")
 
-print( x.upload_file("test.zip", "test upload") )
+print(x.upload_file("Test upload file", "test.zip"))
 # "https://we.tl/t-ajQpdqGxco"
 ```
 
@@ -47,7 +47,7 @@ from wetransfer import TransferApi
 
 x = TransferApi("<my-very-personal-api-key>")
 
-print( x.upload_files( ["file1.zip", "file2.zip"] , "test upload") )
+print(x.upload_files("Test upload files", ["file1.zip", "file2.zip"]))
 # "https://we.tl/t-ajQpdqGxco"
 ```
 
@@ -87,9 +87,10 @@ py3wetransfer_log = logging.getLogger('wetransfer')
 py3wetransfer_log.setLevel(logging.DEBUG)
 py3wetransfer_log.propagate = True
 
-x = TransferApi("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
+x = TransferApi("<my-very-personal-api-key>")
 
-print( x.upload_file("test.zip", "test upload") )
+print(x.upload_file("test upload", "test.zip"))
+# "https://we.tl/t-ajQpdqGxco"
 ```
 
 If you want to see complete http traffic:
@@ -107,9 +108,10 @@ py3wetransfer_log = logging.getLogger('wetransfer')
 py3wetransfer_log.setLevel(logging.DEBUG)
 py3wetransfer_log.propagate = True
 
-x = TransferApi("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
+x = TransferApi("<my-very-personal-api-key>")
 
-print( x.upload_file("test.zip", "test upload") )
+print(x.upload_file("test upload", "test.zip"))
+# "https://we.tl/t-ajQpdqGxco"
 ```
 
 ### Testing authentication
@@ -119,9 +121,10 @@ If you need to test authentication validity
 ```python
 from wetransfer import TransferApi
 
-x = TransferApi("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
+x = TransferApi("<my-very-personal-api-key>")
 
-if x.is_authenticated() : print("we are authenticated")
+if x.is_authenticated():
+    print("we are authenticated")
 ```
 
 ### Additional authentication parameters
@@ -131,9 +134,9 @@ WeTransfer asks officially for a valid "domain_user_id"/"user_identifier" in the
 ```python
 from wetransfer import TransferApi
 
-x = TransferApi( "xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c", 
-                     user_identifier="81940232-9857-4cf7-b685-7a404faf5205")
+x = TransferApi("<my-very-personal-api-key>", 
+                user_identifier="81940232-9857-4cf7-b685-7a404faf5205")
 
-print( x.upload_file("test.zip", "test upload") )
+print(x.upload_file("test upload", "test.zip"))
 # "https://we.tl/t-ajQpdqGxco"
 ```
