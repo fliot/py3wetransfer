@@ -1,8 +1,7 @@
 build/
-my_10mb_file
-my_10mb_file2
-notes.txt
+dist/
 test.py
+test-board.py
 *~
 .venv
 .idea
