@@ -1,8 +1,0 @@
-README.md
-setup.py
-py3wetransfer/__init__.py
-py3wetransfer.egg-info/PKG-INFO
-py3wetransfer.egg-info/SOURCES.txt
-py3wetransfer.egg-info/dependency_links.txt
-py3wetransfer.egg-info/requires.txt
-py3wetransfer.egg-info/top_level.txt
