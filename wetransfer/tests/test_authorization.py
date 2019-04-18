@@ -8,7 +8,7 @@ class TestAuthentication(TestCase):
         try:
             self.transfer_api = TransferApi(os.environ['WE_API_KEY'])
         except AttributeError:
-            self.assertTrue(False, 'Oops. You forgot to set the WE_API_KEY.')
+            self.fail('Oops. You forgot to set the WE_API_KEY.')
 
     def test_authentication(self):
         self.assertTrue(self.transfer_api.is_authenticated())
