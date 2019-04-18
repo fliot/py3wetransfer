@@ -13,7 +13,7 @@ setuptools.setup(
     description="A Python 3 wrapper to use WeTransfer API V2 transfer and board",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Sandyman/py3wetransfer",
+    url="https://github.com/Sandyman/py3-wetransfer",
     packages=setuptools.find_packages(),
     install_requires=[
         "requests>=2.7.0"
