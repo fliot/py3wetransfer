@@ -4,7 +4,7 @@ This module allows you to use WeTransfer services directly, from python 3.x.
 
 It is based on current WeTransfer API V2: https://developers.wetransfer.com/documentation
 
-This project was originally a fork of the py3wetransfer repository that was maintained by Francois Liot. You can still find it [here](https://github.com/fliot/py3wetransfer). It seems, however, that it is no longer maintained.
+This project is forked from the py3wetransfer repository that was maintained by Francois Liot. You can still find it [here](https://github.com/fliot/py3wetransfer). It seems, however, that it is no longer maintained.
 
 ## Installation
 
@@ -66,14 +66,14 @@ print(board_url)
 # "https://we.tl/t-ajQpdqGxco"
 
 # add links
-x.add_links_to_board( board_id, [{"url": "https://wetransfer.com/", "title": "WeTransfer"}] )
+x.add_links_to_board(board_id, [{"url": "https://wetransfer.com/", "title": "WeTransfer"}])
 
 # add files
-x.add_files_to_board( board_id, ["test1.png", "test2.jpg"] )
+x.add_files_to_board(board_id, ["test1.png", "test2.jpg"])
 
 # retrieve the board object 
 # https://wetransfer.github.io/wt-api-docs/index.html#retrieve-boards-information
-board_object = x.get_board( board_id )
+board_object = x.get_board(board_id)
 ```
 
 ### Debug
