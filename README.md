@@ -4,24 +4,28 @@ This module allows you to use WeTransfer services directly, from python 3.x.
 
 It is based on current WeTransfer API V2: https://developers.wetransfer.com/documentation
 
+This project is originally a fork of the py3wetransfer repository that was maintained by Francois Liot. You can still find it [here](https://github.com/fliot/py3wetransfer). It seems, however, that it is no longer maintained.
+
+## Installation
+
 Install though Pypi:
 ```sh
-pip install py3wetransfer
+pip install py3-wetransfer
 ```
 
-# Functional features
+## Functional features
   - Transfer API
 https://wetransfer.github.io/wt-api-docs/index.html#transfer-api
 
   - Board API
 https://wetransfer.github.io/wt-api-docs/index.html#board-api
 
-# Usage
+## Usage
 **Before starting, make sure you have an API key acquired from [Developers Portal](https://developers.wetransfer.com/).**
 
 To initialize the client, you need to use your own api key. 
 
-# Transfer
+### Transfer
 
 **upload_file**
 
@@ -32,7 +36,7 @@ from py3wetransfer import TransferApi
 x = TransferApi("<my-very-personal-api-key>")
 
 print( x.upload_file("test.zip", "test upload") )
->> "https://we.tl/t-ajQpdqGxco"
+# "https://we.tl/t-ajQpdqGxco"
 ```
 
 **upload_files**
@@ -44,10 +48,10 @@ from py3wetransfer import TransferApi
 x = TransferApi("<my-very-personal-api-key>")
 
 print( x.upload_files( ["file1.zip", "file2.zip"] , "test upload") )
->> "https://we.tl/t-ajQpdqGxco"
+# "https://we.tl/t-ajQpdqGxco"
 ```
 
-# Board
+### Board
 
 **Manage board**
 
@@ -59,7 +63,7 @@ x = BoardApi("<my-very-personal-api-key>")
 board_id, board_url = x.create_new_board("test board")
 
 print(board_url)
->> "https://we.tl/t-ajQpdqGxco"
+# "https://we.tl/t-ajQpdqGxco"
 
 # add links
 x.add_links_to_board( board_id, [{"url": "https://wetransfer.com/", "title": "WeTransfer"}] )
@@ -72,7 +76,7 @@ x.add_files_to_board( board_id, ["test1.png", "test2.jpg"] )
 board_object = x.get_board( board_id )
 ```
 
-# Debug
+### Debug
 ```python
 import logging
 from py3wetransfer import TransferApi
@@ -86,10 +90,10 @@ py3wetransfer_log.propagate = True
 x = TransferApi("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 
 print( x.upload_file("test.zip", "test upload") )
-...
 ```
 
 If you want to see complete http traffic:
+
 ```python
 import logging
 from py3wetransfer import TransferApi
@@ -106,11 +110,12 @@ py3wetransfer_log.propagate = True
 x = TransferApi("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 
 print( x.upload_file("test.zip", "test upload") )
-...
 ```
 
-# Testing authentication
+### Testing authentication
+
 If you need to test authentication validity
+
 ```python
 from py3wetransfer import TransferApi
 
@@ -119,8 +124,10 @@ x = TransferApi("xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c")
 if x.is_authenticated() : print("we are authenticated")
 ```
 
-# Additionnal authentication parameters
+### Additional authentication parameters
+
 WeTransfer asks officially for a valid "domain_user_id"/"user_identifier" in their API documentation, but in practise, it perfectly works without providing it, but you can also provide it if you really want...
+
 ```python
 from py3wetransfer import TransferApi
 
@@ -128,5 +135,5 @@ x = TransferApi( "xA8ZYoVox57QfxX77hjQ2AI7hqO6l9M4tqv8b57c",
                      user_identifier="81940232-9857-4cf7-b685-7a404faf5205")
 
 print( x.upload_file("test.zip", "test upload") )
->> "https://we.tl/t-ajQpdqGxco"
+# "https://we.tl/t-ajQpdqGxco"
 ```
