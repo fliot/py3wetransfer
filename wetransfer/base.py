@@ -5,7 +5,7 @@ from .exc import WeTransferError
 from .http import HttpClient
 
 
-LOG = logging.getLogger("py3-wetransfer")
+LOG = logging.getLogger("wetransfer")
 LOG.addHandler(logging.NullHandler())
 LOG.setLevel(logging.INFO)
 

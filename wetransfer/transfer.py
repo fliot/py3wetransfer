@@ -3,7 +3,7 @@ import logging
 from .base import WeTransferBase
 from .file import File
 
-LOG = logging.getLogger("py3-wetransfer")
+LOG = logging.getLogger("wetransfer")
 LOG.addHandler(logging.NullHandler())
 LOG.setLevel(logging.INFO)
 

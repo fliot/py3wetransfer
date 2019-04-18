@@ -11,7 +11,7 @@ except ImportError:
     import mimetypes
     from_file = mimetypes.guess_type
 
-name = "py3wetransfer"
+name = "wetransfer"
 
 LOGGER = logging.getLogger(name)
 LOGGER.addHandler(logging.NullHandler())

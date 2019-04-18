@@ -4,7 +4,7 @@ import logging
 import requests
 from .exc import WeTransferError
 
-LOG = logging.getLogger("py3-wetransfer")
+LOG = logging.getLogger("wetransfer")
 LOG.addHandler(logging.NullHandler())
 LOG.setLevel(logging.INFO)
 
@@ -62,7 +62,7 @@ class HttpClient(ABC):
 
     @http_response
     def post(self, address, **kwargs):
-        """from py3wetransfer.exc import WeTransferError
+        """from wetransfer.exc import WeTransferError
 
         Convenience method to POST
         :param address: URL endpoint
