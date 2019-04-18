@@ -1,7 +1,6 @@
 import json
 import logging
 from .base import WeTransferBase
-from .exc import WeTransferError
 from .file import File
 
 LOG = logging.getLogger("py3-wetransfer")
@@ -18,11 +17,7 @@ class WeTransfer(WeTransferBase):
         :param transfer_id: transfer id.
         :return: WeTransfer URL
         """
-        status_code, body = self.put('transfers/%s/finalize' % transfer_id)
-        if status_code != 200:
-            LOG.error(body['message'])
-            raise WeTransferError(body['message'])
-
+        _, body = self.put('transfers/%s/finalize' % transfer_id, status=200)
         return body['url']
 
     def __complete_file_upload(self, transfer_id, file_id, part_numbers):
@@ -35,11 +30,8 @@ class WeTransfer(WeTransferBase):
         """
         data = {'part_numbers': part_numbers}
         LOG.debug(json.dumps(data, sort_keys=True, indent=2, separators=(',', ': ')))
-        status_code, body = self.put('transfers/%s/files/%s/upload-complete' % (transfer_id, file_id),
-                                     data=json.dumps(data))
-        if status_code != 200:
-            LOG.error(body['message'])
-            raise WeTransferError(body['message'])
+        self.put('transfers/%s/files/%s/upload-complete' % (transfer_id, file_id),
+                 data=json.dumps(data), status=200)
 
     def __request_upload_url(self, transfer_id, file_id, part_number):
         """
@@ -49,11 +41,7 @@ class WeTransfer(WeTransferBase):
         :param part_number: part number
         :return: AWS S3 upload url
         """
-        status_code, body = self.get('transfers/%s/files/%s/upload-url/%s' % (transfer_id, file_id, part_number))
-        if status_code != 200:
-            LOG.error(body['message'])
-            raise WeTransferError(body['message'])
-
+        _, body = self.get('transfers/%s/files/%s/upload-url/%s' % (transfer_id, file_id, part_number), status=200)
         return body['url']
 
     def __create_transfer(self, message, files):
@@ -66,10 +54,7 @@ class WeTransfer(WeTransferBase):
         files_stream = [{'name': file.name, 'size': file.size} for file in files]
         data = {'message': message, 'files': files_stream}
 
-        status_code, body = self.post('transfers', data=json.dumps(data))
-        if status_code != 201:
-            LOG.error(body['message'])
-            raise WeTransferError(body['message'])
+        _, body = self.post('transfers', data=json.dumps(data), status=201)
 
         LOG.debug(json.dumps(body, sort_keys=True, indent=2, separators=(',', ': ')))
 

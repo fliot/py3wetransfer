@@ -1,7 +1,6 @@
 import json
 import logging
 from .base import WeTransferBase
-from .exc import WeTransferError
 from .file import File
 
 LOG = logging.getLogger("py3-wetransfer")
@@ -17,11 +16,7 @@ class Board(WeTransferBase):
         :param board_id: board id
         :return: board information
         """
-        status_code, body = self.get('boards/%s' % board_id)
-        if status_code != 200:
-            LOG.error(body['message'])
-            raise WeTransferError(body['message'])
-
+        _, body = self.get('boards/%s' % board_id, status=200)
         return body
 
     def create_new_board(self, name):
@@ -32,11 +27,7 @@ class Board(WeTransferBase):
         """
         data = {'name': name}
         LOG.debug(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
-        status_code, body = self.post('boards', data=json.dumps(data))
-        if status_code != 201:
-            LOG.error(body['message'])
-            raise WeTransferError(body['message'])
-
+        _, body = self.post('boards', data=json.dumps(data), status=201)
         return body['id'], body['url']
 
     def add_links_to_board(self, board_id, data):
@@ -47,11 +38,7 @@ class Board(WeTransferBase):
         :param data: Data
         :return: Board info (see get_board())
         """
-        status_code, body = self.post('boards/%s/links' % board_id, data=json.dumps(data))
-        if status_code != 201:
-            LOG.error(status_code, body['message'])
-            raise WeTransferError(body['message'])
-
+        self.post('boards/%s/links' % board_id, data=json.dumps(data), status=201)
         return self.get_board(board_id)
 
     def __complete_file_upload_board(self, board_id, file_id):
@@ -61,42 +48,33 @@ class Board(WeTransferBase):
         :param file_id: File id
         :return: None
         """
-        status_code, body = self.put('boards/%s/files/%s/upload-complete' % (board_id, file_id))
-        if status_code != 202:
-            LOG.error(status_code, body['message'])
-            raise WeTransferError(body['message'])
+        self.put('boards/%s/files/%s/upload-complete' % (board_id, file_id), status=202)
 
     def __request_upload_url_board(self, board_id, file_id, part_number, multipart_upload_id):
         """
         Request special upload url, which is tailored for AWS S3
-        :param board_id:
-        :param file_id:
-        :param part_number:
-        :param multipart_upload_id:
-        :return:
+        :param board_id: Board id
+        :param file_id: File id
+        :param part_number: part number
+        :param multipart_upload_id: multipart upload id
+        :return: url
         """
-        status_code, body = self.get('boards/%s/files/%s/upload-url/%s/%s' %
-                                     (board_id, file_id, part_number, multipart_upload_id))
-        if status_code != 200:
-            LOG.error(status_code, body['message'])
-            raise WeTransferError(body['message'])
-
+        _, body = self.get('boards/%s/files/%s/upload-url/%s/%s' %
+                           (board_id, file_id, part_number, multipart_upload_id),
+                           status=200)
         return body['url']
 
     def add_files_to_board(self, board_id, filepaths):
         """
-
-        :param board_id:
-        :param filepaths:
+        Add files to board
+        :param board_id: Board id
+        :param filepaths: list of filepaths
         :return:
         """
         files = [File(filepath) for filepath in filepaths]
         data = [{'name': file.name, 'size': file.size} for file in files]
         LOG.debug(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
-        status_code, body = self.post('boards/%s/files' % board_id, data=json.dumps(data))
-        if status_code != 201:
-            LOG.error(status_code, body['message'])
-            raise WeTransferError(body['message'])
+        _, body = self.post('boards/%s/files' % board_id, data=json.dumps(data), status=201)
 
         LOG.debug(json.dumps(body, sort_keys=True, indent=4, separators=(',', ': ')))
 

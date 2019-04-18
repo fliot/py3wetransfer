@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import json
 import logging
 import requests
+from .exc import WeTransferError
 
 LOG = logging.getLogger("py3-wetransfer")
 LOG.addHandler(logging.NullHandler())
@@ -13,12 +14,23 @@ def http_response(func):
         """
         The wrapper calls the original function, then uses the response object
         to create a <status_code, body> tuple for further use.
-        Used for get, put, post.
+        If a keyword argument called 'status' is found, it is used to check the
+        status code. If the actual status code does not equal the expected one,
+        an error will be raised. Used for get, put, post.
         """
+        expected_status = None
+        if 'status' in kwargs:
+            expected_status = kwargs['status']
+            del kwargs['status']
+
         r = func(*args, **kwargs)
         LOG.debug(r.text)
         status = r.status_code
         body = json.loads(r.text)
+        if expected_status is not None and expected_status != status:
+            LOG.error(status, body['message'])
+            raise WeTransferError('%d: %s' % (status, body['message']))
+
         return status, body
 
     return wrapper_http_response
