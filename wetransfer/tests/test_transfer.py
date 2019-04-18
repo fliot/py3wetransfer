@@ -5,7 +5,7 @@ from wetransfer import TransferApi
 from wetransfer.exc import WeTransferError
 
 image_dir = './wetransfer/tests/images/'
-images = ['we_483_lines.jpg', 'we_nytimes_copy.jpg']
+images = ['we_483_lines.jpg', 'we_nytimes_copy.jpg']  # actual WeTransfer images
 
 
 class TestTransfer(TestCase):
