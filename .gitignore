@@ -1,8 +1,7 @@
+*.bin
 *.egg-info/
 build/
 dist/
-test.py
-test-board.py
 *~
 .venv
 .idea

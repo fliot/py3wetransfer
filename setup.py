@@ -27,4 +27,6 @@ setuptools.setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Internet :: WWW/HTTP"
     ],
+    test_suite='nose.collector',
+    tests_require=['nose'],
 )
