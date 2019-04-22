@@ -20,8 +20,8 @@ class TestBoard(unittest.TestCase):
 
         try:
             cls.board_api = BoardApi(os.environ['WE_API_KEY'])
-        except AttributeError:
-            super().fail('Oops. You forgot to set the WE_API_KEY.')
+        except KeyError:
+            super().skipTest('Oops. You forgot to set the WE_API_KEY.')
 
         try:
             board_id, board_url = cls.board_api.create_new_board('test board')
