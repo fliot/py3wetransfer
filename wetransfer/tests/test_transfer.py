@@ -12,6 +12,7 @@ class TestTransfer(TestCase):
     def setUp(self):
         try:
             self.transfer_api = TransferApi(os.environ['WE_API_KEY'])
+
         except AttributeError:
             self.fail('Oops. You forgot to set the WE_API_KEY.')
 
@@ -19,6 +20,7 @@ class TestTransfer(TestCase):
         try:
             filepath = image_dir + images[0]
             self.transfer_api.upload_file('Upload an image', filepath)
+
         except WeTransferError as e:
             self.fail('Oops. Uploading an image caused to API to raise an error: %s' % e)
 
@@ -26,6 +28,7 @@ class TestTransfer(TestCase):
         try:
             filepaths = [image_dir + x for x in images]
             self.transfer_api.upload_files('Upload multiple images', filepaths)
+
         except WeTransferError as e:
             self.fail('Oops. Uploading an image caused to API to raise an error: %s' % e)
 
@@ -41,7 +44,9 @@ class TestTransfer(TestCase):
             run_command(create_random_file_sh, filename)
 
             self.transfer_api.upload_file('Upload a rather large file', filename)
+
         except WeTransferError as e:
             self.fail('Oops. Uploading an image caused to API to raise an error: %s' % e)
+
         finally:
             run_command(delete_random_file_sh, filename)
