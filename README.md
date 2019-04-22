@@ -129,7 +129,7 @@ if x.is_authenticated():
 
 ### Additional authentication parameters
 
-WeTransfer asks officially for a valid "domain_user_id"/"user_identifier" in their API documentation, but in practise, it perfectly works without providing it, but you can also provide it if you really want...
+WeTransfer asks officially for a valid "domain_user_id"/"user_identifier" in their API documentation, but in practise, it works perfectly without providing it.
 
 ```python
 from wetransfer import TransferApi
@@ -143,7 +143,7 @@ print(x.upload_file("test upload", "test.zip"))
 
 ### Unit tests
 
-The package has a number of tests. You can run the tests by running the command `python setup.py test`. Please make sure you have defined the environment variables `WE_API_KEY`, otherwise all tests will fail. See 'Usage' above to see how you can obtain a key. You can set the key in a shell like so:
+The package has a number of tests. You can run the tests by running the command `python setup.py test`. Please make sure you have defined the environment variable `WE_API_KEY`, otherwise all tests will fail. See 'Usage' above to see how you can obtain a key. You can set the key in a shell like so:
 
 ```bash
 export WE_API_KEY=WvMlogNaWLubua6S5iuA5tRk6ZZDqwh6yaxOpGNa
@@ -151,4 +151,4 @@ export WE_API_KEY=WvMlogNaWLubua6S5iuA5tRk6ZZDqwh6yaxOpGNa
 
 This is an invalid key, so make sure to use your own key. 
 
-Please note that the tests actually upload files, and this may take a while (depending on your internet connection).
+Please note that the tests actually upload files, and this may take a while (depending on your internet connection). Also, running the tests counts toward your API key usage, so bear this in mind.
