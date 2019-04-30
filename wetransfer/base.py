@@ -1,4 +1,5 @@
 import json
+import jwt
 import logging
 import requests
 from .exc import TransferError
@@ -32,7 +33,7 @@ class WeTransferBase(HttpClient):
         headers = self.__base_authorization_headers()
         kwargs = {'headers': headers}
         if self.__user_identifier is not None:
-            kwargs['data'] = {'user_identifier': self.__user_identifier}
+            kwargs['data'] = json.dumps({'user_identifier': self.__user_identifier})
 
         r = requests.post(address, **kwargs)
         body = json.loads(r.text)
