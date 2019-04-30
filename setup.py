@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="py3-wetransfer",
-    version="0.1.4",
+    version="1.0.0",
     author="Sander Huijsen",
     author_email="sander.huijsen@gmail.com",
     maintainer="Sander Huijsen",
@@ -19,7 +19,7 @@ setuptools.setup(
         "requests>=2.7.0"
     ],
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3",
