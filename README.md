@@ -8,7 +8,7 @@ This project is forked from the py3wetransfer repository that was maintained by 
 
 ## Installation
 
-Install though Pypi:
+Install through Pypi:
 ```sh
 pip install py3-wetransfer
 ```
