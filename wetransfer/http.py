@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import json
 import logging
 import requests
-from .exc import WeTransferError
+from .exc import TransferError
 
 LOG = logging.getLogger("wetransfer")
 LOG.addHandler(logging.NullHandler())
@@ -29,7 +29,7 @@ def http_response(func):
         body = json.loads(r.text)
         if expected_status is not None and expected_status != status:
             LOG.error(status, body['message'])
-            raise WeTransferError('%d: %s' % (status, body['message']))
+            raise TransferError('%d: %s' % (status, body['message']))
 
         return status, body
 

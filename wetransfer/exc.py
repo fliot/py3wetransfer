@@ -1,2 +1,2 @@
-class WeTransferError(RuntimeError):
+class TransferError(RuntimeError):
     pass

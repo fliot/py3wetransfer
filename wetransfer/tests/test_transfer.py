@@ -2,7 +2,7 @@ import os
 import subprocess
 from unittest import TestCase
 from wetransfer import TransferApi
-from wetransfer.exc import WeTransferError
+from wetransfer.exc import TransferError
 
 image_dir = './wetransfer/tests/images/'
 images = ['we_483_lines.jpg', 'we_nytimes_copy.jpg']  # actual WeTransfer images
@@ -21,7 +21,7 @@ class TestTransfer(TestCase):
             filepath = image_dir + images[0]
             self.transfer_api.upload_file('Upload an image', filepath)
 
-        except WeTransferError as e:
+        except TransferError as e:
             self.fail('Oops. Uploading an image caused to API to raise an error: %s' % e)
 
     def test_multi_file_upload(self):
@@ -29,7 +29,7 @@ class TestTransfer(TestCase):
             filepaths = [image_dir + x for x in images]
             self.transfer_api.upload_files('Upload multiple images', filepaths)
 
-        except WeTransferError as e:
+        except TransferError as e:
             self.fail('Oops. Uploading an image caused to API to raise an error: %s' % e)
 
     def test_large_file_upload(self):
@@ -45,7 +45,7 @@ class TestTransfer(TestCase):
 
             self.transfer_api.upload_file('Upload a rather large file', filename)
 
-        except WeTransferError as e:
+        except TransferError as e:
             self.fail('Oops. Uploading an image caused to API to raise an error: %s' % e)
 
         finally:

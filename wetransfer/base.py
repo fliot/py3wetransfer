@@ -1,7 +1,7 @@
 import json
 import logging
 import requests
-from .exc import WeTransferError
+from .exc import TransferError
 from .http import HttpClient
 
 
@@ -38,7 +38,7 @@ class WeTransferBase(HttpClient):
         body = json.loads(r.text)
         if r.status_code != 200:
             LOG.error(body['message'])
-            raise WeTransferError(body['message'])
+            raise TransferError(body['message'])
 
         self.__token = 'Bearer %s' % body['token']
 
@@ -88,4 +88,4 @@ class WeTransferBase(HttpClient):
         r = requests.put(url, data=filedata)
         if r.status_code != 200:
             LOG.error(r.text)
-            raise WeTransferError('Error uploading file(s) to AWS S3.')
+            raise TransferError('Error uploading file(s) to AWS S3.')

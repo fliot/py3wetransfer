@@ -1,7 +1,7 @@
 import os
 import unittest
 from wetransfer import BoardApi
-from wetransfer.exc import WeTransferError
+from wetransfer.exc import TransferError
 
 image_dir = './wetransfer/tests/images/'
 images = ['we_483_lines.jpg', 'we_nytimes_copy.jpg']  # actual WeTransfer images
@@ -27,7 +27,7 @@ class TestBoard(unittest.TestCase):
             board_id, board_url = cls.board_api.create_new_board('test board')
             cls.board_id = board_id
 
-        except WeTransferError as e:
+        except TransferError as e:
             super().fail('Oops. Uploading an image caused to API to raise an error: %s' % e)
 
     def test_add_links(self):
@@ -42,7 +42,7 @@ class TestBoard(unittest.TestCase):
         try:
             self.board_api.add_links_to_board(self.board_id, links)
 
-        except WeTransferError as e:
+        except TransferError as e:
             self.fail('Oops. Adding links to board caused API to raise an error: %s' % e)
 
     def test_add_files(self):
@@ -51,7 +51,7 @@ class TestBoard(unittest.TestCase):
         try:
             self.board_api.add_files_to_board(self.board_id, filepaths)
 
-        except WeTransferError as e:
+        except TransferError as e:
             self.fail('Oops. Adding files to board caused API to raise an error: %s' % e)
 
     def test_get_board(self):
@@ -69,5 +69,5 @@ class TestBoard(unittest.TestCase):
             self.assertEqual(2, len(links), 'Oops. Expected a total of 2 links.')
             self.assertEqual(2, len(files), 'Oops. Expected a total of 2 files.')
 
-        except WeTransferError as e:
+        except TransferError as e:
             self.fail('Oops. Getting board info caused API to raise an error: %s' % e)
