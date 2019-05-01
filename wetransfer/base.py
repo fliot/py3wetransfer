@@ -1,5 +1,4 @@
 import json
-import jwt
 import logging
 import requests
 from .exc import TransferError
