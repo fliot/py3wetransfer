@@ -5,11 +5,11 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="py3wetransfer",
-    version="0.0.3",
+    version="1.0.3",
     author="Francois Liot",
     author_email="francois@liot.org",
-    maintainer="Francois Liot",
-    maintainer_email="francois@liot.org",
+    maintainer="Sander Huijsen",
+    maintainer_email="sander.huijsen@gmail.com",
     description="A Python 3 wrapper to use WeTransfer API V2 transfer and board",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -19,7 +19,7 @@ setuptools.setup(
         "requests>=2.7.0"
     ],
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3",
@@ -27,4 +27,6 @@ setuptools.setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Internet :: WWW/HTTP"
     ],
+    test_suite='nose.collector',
+    tests_require=['nose'],
 )

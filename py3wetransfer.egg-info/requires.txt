@@ -1,2 +1,1 @@
-python-magic>=0.4
 requests>=2.7.0
